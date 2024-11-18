@@ -2,7 +2,6 @@
 import os
 from config import settings
 from datetime import datetime
-from typing import List
 from fastapi import FastAPI, HTTPException, Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.middleware.cors import CORSMiddleware
@@ -49,7 +48,7 @@ class User(BaseModel):
 class UserProgress(BaseModel):
     username: str
     solved_count: int
-    recent_problems: List[str]
+    recent_problems: list[str]
     current_streak: int
 
 
@@ -114,7 +113,7 @@ async def add_user(user: User):
 
 
 @app.get("/progress")
-async def get_progress() -> List[UserProgress]:
+async def get_progress() -> list[UserProgress]:
     config = load_config()
     progress_list = []
 
