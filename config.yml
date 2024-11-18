@@ -1,0 +1,5 @@
+users:
+  - leetcode_username: "user1"
+    email: "leetmail@kitto.sh"
+  - leetcode_username: "user2"
+    email: "user2@example.com"
