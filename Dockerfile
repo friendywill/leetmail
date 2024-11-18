@@ -7,8 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY app.py .
-COPY config.yml .
+COPY app.py config.py config.yml ./ 
 
 # Environment variables
 ENV RESEND_API_KEY=""
