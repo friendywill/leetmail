@@ -14,7 +14,7 @@ import secrets
 
 
 # Initialize FastAPI app
-app = FastAPI(title="LeetCode Buddy System")
+app = FastAPI(title="Leetmail ✉️ 🚀")
 security = HTTPBasic()
 
 # CORS middleware
