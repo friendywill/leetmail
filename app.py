@@ -1,16 +1,17 @@
 # app.py
 import os
+from config import settings
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from fastapi import FastAPI, HTTPException, Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 import httpx
-import asyncio
-from resend import Resend
+import resend
 import yaml
 import secrets
+
 
 # Initialize FastAPI app
 app = FastAPI(title="LeetCode Buddy System")
@@ -76,18 +77,16 @@ class LeetCodeClient:
 
 # Initialize clients
 leetcode_client = LeetCodeClient()
-resend_client = Resend(api_key=os.getenv("RESEND_API_KEY"))
+resend.api_key = settings.RESEND_API_KEY
 
 
 # Security check for cron endpoint
 def verify_credentials(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = os.getenv("CRON_USERNAME", "admin")
-    correct_password = os.getenv("CRON_PASSWORD", "admin")
     is_correct_username = secrets.compare_digest(
-        credentials.username.encode("utf8"), correct_username.encode("utf8")
+        credentials.username.encode("utf8"), settings.CRON_USERNAME.encode("utf8")
     )
     is_correct_password = secrets.compare_digest(
-        credentials.password.encode("utf8"), correct_password.encode("utf8")
+        credentials.password.encode("utf8"), settings.CRON_PASSWORD.encode("utf8")
     )
 
     if not (is_correct_username and is_correct_password):
@@ -155,14 +154,14 @@ async def trigger_update(
     config = load_config()
     for user in config["users"]:
         try:
-            resend_client.emails.send(
-                {
-                    "from": "accountability@leetcodebuddy.com",
-                    "to": user["email"],
-                    "subject": "LeetCode Progress Update",
-                    "text": email_content,
-                }
-            )
+            params: resend.Emails.SendParams = {
+                "from": settings.FROM_EMAIL,
+                "to": [user["email"]],
+                "subject": settings.EMAIL_SUBJECT,
+                "text": email_content,
+            }
+            email = resend.Emails.send(params)
+            print(f"Email sent successfully: {email}")
         except Exception as e:
             print(f"Failed to send email to {user['email']}: {str(e)}")
 
@@ -172,4 +171,4 @@ async def trigger_update(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host=settings.HOST, port=settings.PORT)
