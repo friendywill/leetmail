@@ -2,6 +2,7 @@
 import os
 from jsonschema import validate
 from config import settings
+from leet_logger import logger_runs, logger_main
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
