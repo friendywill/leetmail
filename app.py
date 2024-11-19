@@ -1,5 +1,6 @@
 # app.py
 import os
+from jsonschema import validate
 from config import settings
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Depends, Security
@@ -11,6 +12,27 @@ import resend
 import yaml
 import secrets
 
+CONFIG_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "leetcode_username": {"type": "string"},
+                    "email": {
+                        "type": "string",
+                        "format": "email"  # Ensures valid email format
+                    },
+                },
+                "required": ["leetcode_username", "email"],  # Ensure both fields are present
+            },
+        },
+    },
+    "required": ["users"],  # Ensure "users" key is present
+    "additionalProperties": False,  # Disallow any unexpected keys at the root level
+}
 
 # Initialize FastAPI app
 app = FastAPI(title="Leetmail ✉️ 🚀")
@@ -27,10 +49,16 @@ app.add_middleware(
 
 
 # Load config from YAML
-def load_config():
+def load_config() -> dict[str, list[dict[str, str]]]:
+    is_nested_key_str = False
+    is_nested_value_str = False
+    is_dict_list = False
+    is_list_dict = False
     if os.path.exists("config.yml"):
         with open("config.yml", "r") as f:
-            return yaml.safe_load(f)
+            data = yaml.safe_load(f) # pyright: ignore[reportAny]
+            validate(data, CONFIG_SCHEMA) # pyright: ignore[reportAny]
+            return data # pyright: ignore[reportAny]
     return {"users": []}
 
 
