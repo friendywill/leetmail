@@ -49,12 +49,11 @@ app.add_middleware(
 )
 
 
-# Load config from YAML
 def load_config() -> dict[str, list[dict[str, str]]]:
-    is_nested_key_str = False
-    is_nested_value_str = False
-    is_dict_list = False
-    is_list_dict = False
+    """
+    Load config.yml within the project directory, provides some validation.
+    Returns users and their respective emails.
+    """
     if os.path.exists("config.yml"):
         with open("config.yml", "r") as f:
             data = yaml.safe_load(f) # pyright: ignore[reportAny]
