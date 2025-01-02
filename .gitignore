@@ -48,3 +48,6 @@ pip-delete-this-directory.txt
 .ipynb_checkpoints
 config.yml
 config.yml
+
+# logs
+*.log
