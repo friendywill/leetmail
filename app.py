@@ -59,6 +59,8 @@ def load_config() -> dict[str, list[dict[str, str]]]:
     if os.path.exists("config.yml"):
         with open("config.yml", "r") as f:
             logger_main.debug(msg="Config file opened")
+            # These any types can be ignored, as the module does not return
+            # a specific type, so the data is validated here instead.
             data = yaml.safe_load(f) # pyright: ignore[reportAny]
             validate(data, CONFIG_SCHEMA) # pyright: ignore[reportAny]
             return data # pyright: ignore[reportAny]
