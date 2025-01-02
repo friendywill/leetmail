@@ -69,7 +69,7 @@ def load_config() -> dict[str, list[dict[str, str]]]:
     return {"users": []}
 
 
-def save_config(config):
+def save_config(config: object):
     with open("config.yml", "w") as f:
         yaml.dump(config, f)
 
