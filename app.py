@@ -1,17 +1,19 @@
 # app.py
 import os
-from jsonschema import validate
-from config import settings
-from leet_logger import logger_runs, logger_main
+import secrets
 from datetime import datetime
-from fastapi import FastAPI, HTTPException, Depends, Security
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
+
 import httpx
 import resend
 import yaml
-import secrets
+from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from jsonschema import validate
+from pydantic import BaseModel, EmailStr
+
+from config import settings
+from leet_logger import logger_main, logger_runs
 
 CONFIG_SCHEMA = {
     "type": "object",
