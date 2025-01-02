@@ -58,9 +58,12 @@ def load_config() -> dict[str, list[dict[str, str]]]:
     """
     if os.path.exists("config.yml"):
         with open("config.yml", "r") as f:
+            logger_main.debug(msg="Config file opened")
             data = yaml.safe_load(f) # pyright: ignore[reportAny]
             validate(data, CONFIG_SCHEMA) # pyright: ignore[reportAny]
             return data # pyright: ignore[reportAny]
+    else:
+        logger_main.error(msg="The config file does not exist")
     return {"users": []}
 
 
