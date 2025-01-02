@@ -96,7 +96,7 @@ class LeetCodeClient:
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{self.base_url}/userProfile/{username}")
             if response.status_code != 200:
-                raise HTTPException(status_code=404, detail="LeetCode user not found")
+                raise HTTPException(status_code=response.status_code, detail=str(response.content))
             return response.json() # pyright: ignore[reportAny]
 
     async def get_user_calendar(self, username: str) -> dict[str, str]:
