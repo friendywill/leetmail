@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # Server Settings
     PORT: int = Field(default=8000)
     HOST: str = Field(default="0.0.0.0")
+    LOG_LEVEL: str = Field(default="INFO")
 
     # WARN: This is what is shown in the docs, and the pyright LSP is showing the
     # below issue, there does not seem to be another way of doing this without

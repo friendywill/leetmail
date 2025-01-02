@@ -1,4 +1,5 @@
 import logging
+from config import settings
 
 """Leetmail Logger
 logger_runs: Run-specific logs, EG, whether a run is successful or not. Should
@@ -31,7 +32,7 @@ logger_runs.addHandler(runs_file_handler)
 
 # Configure logger for main application logs
 logger_main = logging.getLogger("LEETMAIL_APPLICATION")
-logger_main.setLevel(logging.DEBUG)
+logger_main.setLevel(level=settings.LOG_LEVEL)
 
 # Console handler for logger_main
 main_console_handler = logging.StreamHandler()
