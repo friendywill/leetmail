@@ -1,6 +1,6 @@
 services:
   app:
-    image: ${IMAGE_URL_PREFIX}leetmail
+    image: ${IMAGE_URL_PREFIX_APP}leetmail:main
     build:
       context: .
     volumes:
@@ -8,7 +8,7 @@ services:
     env_file: .env
 
   cron:
-    image: ${IMAGE_URL_PREFIX}docker-curl-cron
+    image: ${IMAGE_URL_PREFIX_CRON}docker-curl-cron:master
     build:
       context: ./docker-curl-cron/
     env_file: .env
