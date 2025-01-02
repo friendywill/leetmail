@@ -1,17 +1,41 @@
 # app.py
 import os
-from config import settings
+import secrets
 from datetime import datetime
-from typing import List
-from fastapi import FastAPI, HTTPException, Depends, Security
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
+
 import httpx
 import resend
 import yaml
-import secrets
+from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from jsonschema import validate
+from pydantic import BaseModel, EmailStr
 
+from config import settings
+from leet_logger import logger_main, logger_runs
+
+CONFIG_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "leetcode_username": {"type": "string"},
+                    "email": {
+                        "type": "string",
+                        "format": "email"  # Ensures valid email format
+                    },
+                },
+                "required": ["leetcode_username", "email"],  # Ensure both fields are present
+            },
+        },
+    },
+    "required": ["users"],  # Ensure "users" key is present
+    "additionalProperties": False,  # Disallow any unexpected keys at the root level
+}
 
 # Initialize FastAPI app
 app = FastAPI(title="Leetmail ✉️ 🚀")
@@ -27,15 +51,25 @@ app.add_middleware(
 )
 
 
-# Load config from YAML
-def load_config():
+def load_config() -> dict[str, list[dict[str, str]]]:
+    """
+    Load config.yml within the project directory, provides some validation.
+    Returns users and their respective emails.
+    """
     if os.path.exists("config.yml"):
         with open("config.yml", "r") as f:
-            return yaml.safe_load(f)
+            logger_main.debug(msg="Config file opened")
+            # These any types can be ignored, as the module does not return
+            # a specific type, so the data is validated here instead.
+            data = yaml.safe_load(f) # pyright: ignore[reportAny]
+            validate(data, CONFIG_SCHEMA) # pyright: ignore[reportAny]
+            return data # pyright: ignore[reportAny]
+    else:
+        logger_main.error(msg="The config file does not exist")
     return {"users": []}
 
 
-def save_config(config):
+def save_config(config: object):
     with open("config.yml", "w") as f:
         yaml.dump(config, f)
 
@@ -49,30 +83,30 @@ class User(BaseModel):
 class UserProgress(BaseModel):
     username: str
     solved_count: int
-    recent_problems: List[str]
+    recent_problems: list[str]
     current_streak: int
 
 
 # API client for LeetCode
 class LeetCodeClient:
     def __init__(self):
-        self.base_url = "https://alfa-leetcode-api.onrender.com"
+        self.base_url: str = "https://alfa-leetcode-api.onrender.com"
 
-    async def get_user_profile(self, username: str) -> dict:
+    async def get_user_profile(self, username: str) -> dict[str, str]:
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{self.base_url}/userProfile/{username}")
             if response.status_code != 200:
-                raise HTTPException(status_code=404, detail="LeetCode user not found")
-            return response.json()
+                raise HTTPException(status_code=response.status_code, detail=str(response.content))
+            return response.json() # pyright: ignore[reportAny]
 
-    async def get_user_calendar(self, username: str) -> dict:
+    async def get_user_calendar(self, username: str) -> dict[str, str]:
         year = datetime.now().year
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{self.base_url}/userProfileCalendar",
                 params={"username": username, "year": year},
             )
-            return response.json()
+            return response.json() # pyright: ignore[reportAny]
 
 
 # Initialize clients
@@ -108,13 +142,13 @@ async def get_users():
 @app.post("/users")
 async def add_user(user: User):
     config = load_config()
-    config["users"].append(user.dict())
+    config["users"].append(user.model_dump())
     save_config(config)
     return {"message": "User added successfully"}
 
 
 @app.get("/progress")
-async def get_progress() -> List[UserProgress]:
+async def get_progress() -> list[UserProgress]:
     config = load_config()
     progress_list = []
 
@@ -124,9 +158,9 @@ async def get_progress() -> List[UserProgress]:
 
         progress = UserProgress(
             username=user["leetcode_username"],
-            solved_count=profile.get("totalSolved", 0),
-            recent_problems=profile.get("recentSubmissionList", [])[:5],
-            current_streak=calendar.get("streak", 0),
+            solved_count=int(profile.get("totalSolved", 0)),
+            recent_problems=list(profile.get("recentSubmissionList", [])[:5]),
+            current_streak=int(calendar.get("streak", 0)),
         )
         progress_list.append(progress)
 
