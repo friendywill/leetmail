@@ -90,23 +90,23 @@ class UserProgress(BaseModel):
 # API client for LeetCode
 class LeetCodeClient:
     def __init__(self):
-        self.base_url = "https://alfa-leetcode-api.onrender.com"
+        self.base_url: str = "https://alfa-leetcode-api.onrender.com"
 
-    async def get_user_profile(self, username: str) -> dict:
+    async def get_user_profile(self, username: str) -> dict[str, str]:
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{self.base_url}/userProfile/{username}")
             if response.status_code != 200:
                 raise HTTPException(status_code=404, detail="LeetCode user not found")
-            return response.json()
+            return response.json() # pyright: ignore[reportAny]
 
-    async def get_user_calendar(self, username: str) -> dict:
+    async def get_user_calendar(self, username: str) -> dict[str, str]:
         year = datetime.now().year
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 f"{self.base_url}/userProfileCalendar",
                 params={"username": username, "year": year},
             )
-            return response.json()
+            return response.json() # pyright: ignore[reportAny]
 
 
 # Initialize clients
