@@ -12,7 +12,9 @@ class Settings(BaseSettings):
 
     # Email Settings
     FROM_EMAIL: EmailStr = Field(default="updates@leetmail.com")
-    EMAIL_SUBJECT: str = Field(default="LeetCode: Your Daily LeetCode Progress Update")
+    EMAIL_SUBJECT: str = Field(
+        default="LeetCode: Your Daily LeetCode Progress Update"
+    )
 
     # Server Settings
     PORT: int = Field(default=8000)
