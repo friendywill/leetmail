@@ -18,7 +18,11 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000)
     HOST: str = Field(default="0.0.0.0")
 
-    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
-
+    # WARN: This is what is shown in the docs, and the pyright LSP is showing the
+    # below issue, there does not seem to be another way of doing this without
+    # breaking something else.
+    model_config = SettingsConfigDict( # pyright: ignore[reportUnannotatedClassAttribute]
+        env_file=".env", case_sensitive=True
+    )
 
 settings = Settings()
