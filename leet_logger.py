@@ -6,19 +6,11 @@ logger_runs.setLevel(logging.DEBUG)
 
 # Console handler for logger_runs
 runs_console_handler = logging.StreamHandler()
-runs_console_handler.setLevel(logging.DEBUG)
-runs_console_format = logging.Formatter(
-    "%(asctime)s - LEETMAIL_RUNS - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-)
-runs_console_handler.setFormatter(runs_console_format)
+runs_console_handler.setFormatter(base_format)
 
 # File handler for logger_runs
 runs_file_handler = logging.FileHandler("leetmail_runs.log")
-runs_file_handler.setLevel(logging.DEBUG)
-runs_file_format = logging.Formatter(
-    "%(asctime)s - LEETMAIL_RUNS - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-)
-runs_file_handler.setFormatter(runs_file_format)
+runs_file_handler.setFormatter(base_format)
 
 # Add handlers to logger_runs
 logger_runs.addHandler(runs_console_handler)
