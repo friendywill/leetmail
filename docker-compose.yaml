@@ -1,0 +1,12 @@
+services:
+  app:
+    image: ${IMAGE_URL_PREFIX}leetmail
+    build:
+      context: .
+    env_file: .env
+
+  cron:
+    image: ${IMAGE_URL_PREFIX}docker-curl-cron
+    build:
+      context: ./docker-curl-cron/
+    env_file: .env
