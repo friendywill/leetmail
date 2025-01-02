@@ -15,7 +15,7 @@ base_format = logging.Formatter(
 
 # Configure logger for run-specific logs
 logger_runs = logging.getLogger("LEETMAIL_RUNS")
-logger_runs.setLevel(logging.DEBUG)
+logger_runs.setLevel(logging.INFO)
 
 # Console handler for logger_runs
 runs_console_handler = logging.StreamHandler()
