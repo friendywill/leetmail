@@ -48,11 +48,12 @@ accountable.
        email: "user2@example.com"
    ```
 
-4. **Build and run with Docker**
+4. **Build and run with Docker Compose**
 
    ```bash
-   docker build -t leetmail .
-   docker run -p 8000:8000 --env-file .env leetmail
+   docker-compose up -d # Add --build if required.
+   # If looking to run without CRON, just do:
+   docker-compose up -d app
    ```
 
 ## API Endpoints 🛠️
