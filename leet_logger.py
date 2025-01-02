@@ -6,7 +6,7 @@ base_format = logging.Formatter(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# Configure logger for runs-specific logs
+# Configure logger for run-specific logs
 logger_runs = logging.getLogger("LEETMAIL_RUNS")
 logger_runs.setLevel(logging.DEBUG)
 
