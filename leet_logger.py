@@ -1,5 +1,12 @@
 import logging
 
+"""Leetmail Logger
+logger_runs: Run-specific logs, EG, whether a run is successful or not. Should
+only include INFO and CRITICAL level logs.
+logger_main: Application-specific logs, EG, whether the connection to Leetcode
+is successful or not. Should include all levels of logs.
+"""
+
 # Base format for all logs
 base_format = logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
