@@ -142,7 +142,7 @@ async def get_users():
 @app.post("/users")
 async def add_user(user: User):
     config = load_config()
-    config["users"].append(user.dict())
+    config["users"].append(user.model_dump())
     save_config(config)
     return {"message": "User added successfully"}
 
