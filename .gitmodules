@@ -1,0 +1,3 @@
+[submodule "docker-curl-cron"]
+	path = docker-curl-cron
+	url = git@github.com:friendywill/docker-curl-cron.git
