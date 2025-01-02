@@ -3,6 +3,8 @@ services:
     image: ${IMAGE_URL_PREFIX}leetmail
     build:
       context: .
+    volumes:
+      - ./config.yml:/app/config.yml
     env_file: .env
 
   cron:
