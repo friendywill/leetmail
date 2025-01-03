@@ -195,9 +195,9 @@ async def trigger_update(
                 "text": email_content,
             }
             email = resend.Emails.send(params)
-            print(f"Email sent successfully: {email}")
+            logger_runs.info(f"Email sent successfully: {email}")
         except Exception as e:
-            print(f"Failed to send email to {user['email']}: {str(e)}")
+            logger_runs.error(f"Failed to send email to {user['email']}: {str(e)}")
 
     return {"message": "Update triggered and emails sent"}
 
