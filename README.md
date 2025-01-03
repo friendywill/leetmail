@@ -50,6 +50,11 @@ accountable.
 
 4. **Build and run with Docker Compose**
 
+   > NOTE: If building the CRON job, please execute:
+   ```bash
+   git submodule update --init
+   ```
+
    ```bash
    docker-compose up -d # Add --build if required.
    # If looking to run without CRON, just do:
