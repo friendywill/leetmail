@@ -83,7 +83,7 @@ class User(BaseModel):
 class UserProgress(BaseModel):
     username: str
     solved_count: int
-    recent_problems: list[str]
+    recent_problems: list[dict[str, str]]
     current_streak: int
 
 
