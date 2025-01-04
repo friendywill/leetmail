@@ -159,7 +159,7 @@ async def get_progress() -> list[UserProgress]:
         progress = UserProgress(
             username=user["leetcode_username"],
             solved_count=int(profile.get("totalSolved", 0)),
-            recent_problems=list(profile.get("recentSubmissionList", [])[:5]),
+            recent_problems=list(profile.get("recentSubmissions", [])[:5]),
             current_streak=int(calendar.get("streak", 0)),
         )
         progress_list.append(progress)
